@@ -34,7 +34,7 @@ jobs:
       shell: pixi run bash {0}
     - name: Handle errors
       run: |
-        if [[ -s cppcheck_err.txt ]];
+        if [ -s cppcheck_err.txt ];
         then
           cat cppcheck_err.txt
           exit 1
