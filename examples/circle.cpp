@@ -9,11 +9,13 @@
 
 #include <splinart/build_img.hpp>
 #include <splinart/imshow.hpp>
-usingnamespacext::placeholders;
-int main(intargc, char *argv[]) {
+
+using namespace xt::placeholders;
+
+int main(int argc, char *argv[]) {
   std::size_timg_size = 1000;
   std::size_tnb_samples = 10000;
-  splinart::Circlecircle({0.5, 0.5}, 0.3, 75);
+  splinart::Circle circle({0.5, 0.5}, 0.3, 75);
   autoimg = splinart::build_img({img_size, img_size}, {circle}, nb_samples);
   splinart::imshow(img);
   return0;
