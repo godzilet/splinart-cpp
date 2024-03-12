@@ -24,6 +24,7 @@ jobs:
           cat cppcheck_err.txt
           exit 1
         fi
+      shell: pixi run bash -e {0}
   tests:
     needs: pre-commit
     runs-on: ${{ matrix.os }}
