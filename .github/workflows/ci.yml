@@ -1,19 +1,59 @@
 name: "Run CI"
 
-on: pull_request
+on:
+  pull_request:
 
 jobs:
-  tests:
+  pre-commit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: pre-commit/action@v3.0.1
+  cppcheck:
+    name: Configure static analyse with cmake
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - uses: prefix-dev/setup-pixi@v0.5.1
+      with:
+          pixi-version: v0.16.1
+          cache: true
+    - name: cppcheck Installation
+      run: pixi add cppcheck
+    - name: Configure
+      run: |
+        cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
+        cppcheck --enable=all -q --project=.build/compile_commands.json --suppressions-list=.cppcheck 2> cppcheck_err.txt
+      shell: pixi run bash {0}
+    - name: Handle errors
+      run: |
+        if [ -s cppcheck_err.txt ];
+        then
+          cat cppcheck_err.txt
+          exit -1
+        fi
+
+  tests:
+    needs: [pre-commit, cppcheck]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: prefix-dev/setup-pixi@v0.5.1
         with:
             pixi-version: v0.16.1
             cache: true
-            #auth-host: prefix.dev
-            #auth-token: ${{ secrets.PREFIX_DEV_TOKEN }}
-      - run: pixi run test
+      - name: Run tests
+        run: pixi run test
