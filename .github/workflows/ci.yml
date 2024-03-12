@@ -5,13 +5,19 @@ on: pull_request
 #      uses: threeal/cmake-action@v1.3.0
 jobs:
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v3
     - uses: pre-commit/action@v3.0.1
   cppcheck:
     name: Configure static analyse with cmake
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -34,7 +40,7 @@ jobs:
           exit 1
         fi
   tests:
-    needs: pre-commit
+    needs: [pre-commit, cppcheck]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
