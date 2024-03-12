@@ -1,7 +1,8 @@
 name: "Run CI"
 
 on: pull_request
-
+#- name: Configure
+#      uses: threeal/cmake-action@v1.3.0
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -14,8 +15,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Configure
-      uses: threeal/cmake-action@v1.3.0
+
     - run: |
         cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
         cppcheck --enable=all -q --project=.build/compile_commands.json 2> cppcheck_err.txt
