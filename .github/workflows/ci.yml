@@ -1,6 +1,7 @@
 name: "Run CI"
 
 on: pull_request
+#cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
 
 jobs:
   pre-commit:
@@ -8,6 +9,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: pre-commit/action@v3.0.1
+  configure:
+    name: Configure static analyse with cmake
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Configure
+      uses: threeal/cmake-action@v1.3.0
+    - run: |
+        cppcheck --enable=all -q --project=.build/compile_commands.json 2> cppcheck_err.txt
+        if [[ -s cppcheck_err.txt ]];
+        then
+          cat cppcheck_err.txt
+          exit 1
+        fi
   tests:
     needs: pre-commit
     runs-on: ${{ matrix.os }}
