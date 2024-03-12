@@ -5,7 +5,7 @@ on: pull_request
 #      uses: threeal/cmake-action@v1.3.0
 jobs:
   pre-commit:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
