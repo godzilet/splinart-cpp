@@ -26,7 +26,7 @@ inline auto spline(const xt::xtensor<double, 1> &xs,
   auto n = xs.shape()[0];
   auto u_i = xt::zeros_like(ys);
   auto y2s = xt::zeros_like(ys);
-  auto unused = 4;
+  /// auto unused = 4;
 
   auto dif = xt::eval(xt::diff(xs));
   auto sig = xt::eval(
