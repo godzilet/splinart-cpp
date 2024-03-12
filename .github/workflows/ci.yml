@@ -1,7 +1,6 @@
 name: "Run CI"
 
 on: pull_request
-#cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
 
 jobs:
   pre-commit:
@@ -18,6 +17,7 @@ jobs:
     - name: Configure
       uses: threeal/cmake-action@v1.3.0
     - run: |
+        cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
         cppcheck --enable=all -q --project=.build/compile_commands.json 2> cppcheck_err.txt
         if [[ -s cppcheck_err.txt ]];
         then
