@@ -26,7 +26,7 @@ jobs:
           pixi-version: v0.16.1
           cache: true
     - name: cppcheck Installation
-      run: pixi add cppcheck=2.7
+      run: pixi add cppcheck=2.7.5
     - name: Configure
       run: |
         cmake -S . -B .build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -DBUILD_EXAMPLES=ON
